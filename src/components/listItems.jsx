@@ -1,11 +1,18 @@
+import axios from "axios";
 import React, { useState } from "react";
 
-const ListItems = ({ slno, data = {} }) => {
-  const [editable, setEditable] = useState(true);
-  const [name, setName] = useState(data["Name"]);
-  const [prod, setProd] = useState(data["Productivity"]);
-  const [coll, setColl] = useState(data["Collaboration"]);
-  const [comm, setComm] = useState(data["Communication"]);
+const ListItems = ({
+  slno,
+  newrow,
+  data = {},
+  onCancel = () => {},
+  onDelete = () => {},
+}) => {
+  const [editable, setEditable] = useState(newrow ? false : true);
+  const [name, setName] = useState(data["name"]);
+  const [prod, setProd] = useState(data["productivity"]);
+  const [coll, setColl] = useState(data["collaboration"]);
+  const [comm, setComm] = useState(data["communication"]);
 
   const changeName = (e) => {
     setName(e.target.value);
@@ -20,21 +27,59 @@ const ListItems = ({ slno, data = {} }) => {
     setComm(e.target.value);
   };
 
-  const edit = () => {
+  const edit = async () => {
     setEditable((state) => !state);
   };
 
-  const save = () => {
+  const save = async (e) => {
+    e.preventDefault();
+    if (
+      name === undefined ||
+      prod === undefined ||
+      coll === undefined ||
+      comm === undefined ||
+      name === "" ||
+      prod === "" ||
+      coll === "" ||
+      comm === ""
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
+    try {
+      if (newrow) {
+        const addData = await axios.post("http://localhost:8080/add/", {
+          name,
+          prod,
+          coll,
+          comm,
+        });
+      } else {
+        const updatedData = await axios.post(
+          "http://localhost:8080/update/" + slno,
+          { name, prod, coll, comm }
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
     setEditable((state) => !state);
   };
 
   const cancel = () => {
+    if (newrow) {
+      onCancel();
+    }
     setEditable((state) => !state);
   };
 
-  const deleteRow = (data) => {
+  const deleteRow = async () => {
     // delete the row on confirmation
     if (window.confirm("Do you want to delete row?") === true) {
+      const deleteData = await axios.get(
+        "http://localhost:8080/delete/" + slno
+      );
+      onDelete(slno);
       console.log("Deleted");
     } else {
       console.log("Not Delete");
@@ -84,10 +129,9 @@ const ListItems = ({ slno, data = {} }) => {
         />
       </td>
       <td>
-        {(data["Productivity"] +
-          data["Collaboration"] +
-          data["Communication"]) /
-          3}
+        {prod || coll || comm
+          ? ((Number(prod) + Number(coll) + Number(comm)) / 3).toFixed(2)
+          : 0}
       </td>
       <td>
         <button
@@ -101,8 +145,8 @@ const ListItems = ({ slno, data = {} }) => {
 
         <button
           style={{ display: editable ? "none" : "block" }}
-          onClick={() => {
-            save();
+          onClick={(e) => {
+            save(e);
           }}>
           Save
         </button>

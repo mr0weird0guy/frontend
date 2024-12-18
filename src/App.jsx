@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import ListContainer from "./components/listcontainer";
 import axios from "axios";
@@ -7,18 +6,17 @@ import { useEffect, useState } from "react";
 function App() {
   const [list, setList] = useState([]);
 
-  const fetchAll = async () => {
-    try {
-      const res = await axios.get("http://localhost:8080/getAll");
-      setList(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/getAll");
+        // console.log(res);
+        setList(await res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
     fetchAll();
-    console.log(list);
   }, []);
 
   return (
