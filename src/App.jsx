@@ -1,29 +1,43 @@
-import "./App.css";
-import ListContainer from "./components/listcontainer";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import { Login, Dashboard, Form, Review, ManageForm } from "./pages";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
-function App() {
-  const [list, setList] = useState([]);
-
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const res = await axios.get("http://localhost:8080/getAll");
-        // console.log(res);
-        setList(await res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchAll();
-  }, []);
-
+const App = () => {
   return (
-    <div className="App">
-      <ListContainer list={list} />
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/form/*" element={<Form />} />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/review/:id"
+        element={
+          <ProtectedRoute>
+            <Review />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/manage-form"
+        element={
+          <ProtectedRoute>
+            <ManageForm />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="*" element={<ProtectedRoute />} />
+    </Routes>
   );
-}
+};
 
 export default App;
