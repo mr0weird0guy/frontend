@@ -76,7 +76,7 @@ const ManageForm = () => {
         {defaultQuestion.map((item, index) => (
           <FormItem
             key={index}
-            qType={item.responceType}
+            questionType={item.responceType}
             initialQuestion={item.question}
             initialOptions={item.options}
             questions={item.questions ? item.questions : []}

@@ -86,7 +86,7 @@ const Dashboard = () => {
 
       {/* Task Table with Filter Integration */}
       <ResponseTable
-        onClick={(responceId) => navigate(`/review/${responceId.empId}`)}
+        onClick={(responce) => navigate(`/review/${responce.empId}`)}
         responces={responces}
       />
     </Layout>
