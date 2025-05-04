@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Layout,
-  AnalyticsCard,
-  ResponseTable,
-} from "../../components/index.jsx";
+import { Layout, AnalyticsCard, Table } from "../../components/index.jsx";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
@@ -85,9 +81,10 @@ const Dashboard = () => {
       </div>
 
       {/* Task Table with Filter Integration */}
-      <ResponseTable
+      <Table
         onClick={(responce) => navigate(`/review/${responce.empId}`)}
-        responces={responces}
+        name="Responces"
+        data={responces}
       />
     </Layout>
   );

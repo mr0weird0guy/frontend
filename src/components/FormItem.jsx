@@ -5,9 +5,16 @@ const FormItem = ({
   initialOptions = ["Option 1"],
   questionType = "sLine",
   questions = [],
+  scoring = {
+    min: 0,
+    max: 5,
+    defaultValue: 0,
+  },
+  topic = "",
 }) => {
   const [question, setQuestion] = useState(initialQuestion);
   const [options, setOptions] = useState(initialOptions);
+  const [scoringRange, setScoringRange] = useState(scoring);
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...options];
@@ -115,9 +122,12 @@ const FormItem = ({
             id="booleanCheck"
             disabled
           />
-          <label className="form-check-label" htmlFor="booleanCheck">
-            Yes completed {item}
-          </label>
+          <input
+            type="text"
+            className="form-control mt-2"
+            value={item}
+            onChange={(e) => handleOptionChange(index, e.target.value)}
+          />
         </div>
       ));
     } else if (questionType === "time") {
@@ -134,6 +144,7 @@ const FormItem = ({
 
   return (
     <div className="card p-4 mb-4">
+      <h5 className="card-title">{topic}</h5>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <input
           type="text"

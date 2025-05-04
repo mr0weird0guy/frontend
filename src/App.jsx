@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Login, Dashboard, Form, Review, ManageForm } from "./pages";
+import { Login, Dashboard, Form, Review, ManageForm, EditForm } from "./pages";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const App = () => {
@@ -31,6 +31,15 @@ const App = () => {
         element={
           <ProtectedRoute>
             <ManageForm />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/edit-form/:id"
+        element={
+          <ProtectedRoute>
+            <EditForm />
           </ProtectedRoute>
         }
       />
